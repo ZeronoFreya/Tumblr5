@@ -1,0 +1,69 @@
+﻿<html window-frame="transparent">
+<head>
+<title>这是个模板</title>
+<style type="text/css" src="scs/css.scs"></style>
+<script type="text/tiscript" src="tis/tis.tis"></script>
+</head>
+<body>
+<!-- <button#tumblr>Tumblr</button> -->
+<widget#widget>
+<aside#widget-aside>
+    <labels#sites-nav>
+        <label panel=0>Tumblr</label>
+        <label panel=1>Y</label>
+    </labels>
+</aside>
+<main#widget-main>
+    <include src="titlebar.html" />
+    <panels#sites-panel>
+        <panel#tumblr panel=0>
+            <tabs.main>
+                <panels#tumblr-tabs>
+                    <panel panel=0>
+                        <ul#tumblr-view .view></ul>
+                    </panel>
+                    <panel panel=1>Like</panel>
+                    <panel panel=2>Kuvshinov-ilya</panel>
+                </panels>
+            </tabs>
+            <aside#tumblr-aside>
+                <div#tumblr-user>
+                    <div#user-avatar></div>
+                    <div#user-panel>
+                        <labels#tumblr-nav>
+                            <div.tumblr-nav-group>
+                                <label panel=0>Home</label>
+                                <label panel=1>Like</label>
+                            </div>
+                            <div#tumblr-attention .tumblr-nav-group>
+                                <label panel=2>Kuvshinov-ilya</label>
+                            </div>
+                        </labels>
+                    </div>
+                </div>
+                <ul.list></ul>
+            </aside>
+            <div.tumblr-homepage>
+                <div.login-contain>
+                    <div .input-group>
+                        <input type="text" name="tumblr-user" novalue="UserName">
+                    </div>
+                    <div .input-group>
+                        <input type="text" name="tumblr-pwd" novalue="PassWord">
+                    </div>
+                    <div .button-group>
+                        <button#tumblr-login .login-btn>Login</button>
+                        <button .sign-up-btn>Sign</button>
+                    </div>
+                </div>
+            </div>
+        </panel>
+        <panel panel=1>Y</panel>
+    </panels>
+    <include src="statusbar.html" />
+</main>
+
+</widget>
+</body>
+
+</html>

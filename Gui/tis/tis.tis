@@ -1,0 +1,114 @@
+﻿include "common.tis";
+namespace selects {
+    var statusBar;
+}
+self.ready = function() {
+    //设置窗口居中
+    // setWinToCenter(1480);
+    // view.windowTopmost = true;
+    // var h = $(header).box(#height, #border, #view);
+    // setMinSize( 320,197.76 );
+    // 加载或刷新deBug？
+    $(#window-debug).on("click",function(){
+        Sciter.launch( "inspector.exe" );
+        view.connectToInspector($(html));
+    });
+    // var ul = $(#ul);
+    // for(var i=0;i<100;i++){
+    //     ul.$append(<li>{i}</li>);
+    // }
+    // ul.postEvent("is-scroll");
+    selects.statusBar = $(#status-bar);
+
+    $(#tumblr-login).on("click",function(){
+        $(.tumblr-homepage).@.addClass("tumblr-homepage-collapsed");
+        view.initTumblr();
+        // $(#ul).postEvent("load-imglist");
+    })
+
+    // $(#window-menu).on("click",function(){
+    //     view.getDashboards();
+    //     // $(#ul).postEvent("load-imglist");
+    // })
+    // $(li[imgid="163313406078[1]"]).text = "1234";
+    // $(aside).state.expanded = true;
+    // $(labels#sites-nav).on("click","label",function(){
+    //     if( this.@.hasClass("active") ){
+
+    //     }
+    // });
+}
+function appendImgLoading( html ){
+    if (html=="") return;
+    self.$(#tumblr-view).append(html);
+    if ( $(#tumblr-view).scroll(#bottom) < 0 ) {
+        view.getDashboards();
+    }
+}
+function setImgId( id, i, p, dl ){
+    // stdout.println(id, i);
+    var li = $(li.loading[imgid="{i}"]);
+    if(li){
+        li.@#imgid = id;
+        li.@#preview = p;
+        li.@#download = dl;
+        // li.text = id;
+        li.$(.li-footer).text = id;
+    }
+    // li.@#imgid = id;
+    // li.@.removeClass("loading");
+}
+function setImgIdOver(){
+    // if ( $(#tumblr-view).scroll(#bottom) < 0 ) {
+    //     view.getDashboards();
+    // }
+    $(#tumblr-view).@#loading = 0;
+    $(#status-bar).text = "loading-end";
+}
+function setImgBg( id, path ){
+    // stdout.println(id, path);
+    var li = $(li[imgid="{id}"]);
+    // stdout.println(li);
+    if(li){
+        // li.text = id;
+        li.post( ::this.style#background-image = "url(" + path + ")" );
+        li.@.removeClass("loading");
+    }
+}
+function setPreview( id, path ){
+    // stdout.println(id, path);
+    var li = $(#tumblr .list li[imgid="{id}"]);
+    if (li) {
+        // li.$(img).post(::this.@#src = path);
+        li.$(div.img).post( ::this.style#background-image = "url(" + path + ")" );
+        li.@.removeClass("loading");
+        // stdout.println("0",path);
+        if ( path.indexOf("imgSave") != -1 ) {
+            // stdout.println("1",path);
+            li.@.addClass("download");
+        }
+    }
+}
+function downloaded( id, path, module ){
+    // stdout.println("已下载",id);
+    // var li = $({module});
+    var li = $(#tumblr .list li[imgid="{id}"]);
+    if (li) {
+        li.@.addClass("download").@.removeClass("loading");
+        li.$(div.img).post( ::this.style#background-image = "url(" + path + ")" );
+        // li.@#class = "download";
+
+        // li.@#thumbnails = http;
+    }
+}
+function statusInfo( text ){
+     selects.statusBar.text = text;
+}
+function timeout( id, http, module ){
+    // alert(module);
+    var li = $({module});
+    if (li) {
+        li.@.addClass("timeout").@.removeClass("loading");
+        li.@#thumbnails = http;
+    }
+}

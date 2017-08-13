@@ -137,3 +137,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+download/
+imgTemp/
+imgSave/
+tumblr_credentials.json
+data.json
+inspector.exe

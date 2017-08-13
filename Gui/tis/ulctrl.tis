@@ -1,0 +1,58 @@
+class UlCtrl: Behavior {
+    var liHeight = 0;
+    var responsePosY = 0;
+    var listTemplate = "<li.loading imgid=%s preview='%s' download='%s' style='background-image: url(%s)'><i></i><div.li-popup><div.img></div></div></li>";
+    function attached() {
+        this.@#loading = 0;
+        this.height = this.box(#height, #border, #view);
+        // this.subscribe(mousewheel, Event.MOUSE, Event.MOUSE_WHEEL);
+        // this.subscribe("mousedown", onMouseDown);
+
+        // this << event load-imglist (evt) {
+        //     while( this.scroll(#bottom) < 0 ){
+        //         view.getDashboards()
+        //     }
+        // }
+
+        this.on("click","li",function(){
+            if ( this.@.hasClass("timeout") ) {
+                this.@.addClass("loading").@.removeClass("timeout");
+                return view.refreshTimeoutImg( this.@#imgid, this.@#thumbnails );
+            }
+            var list = $(#tumblr .list);
+            if ( list.$(li[imgid="{this.@#imgid}"]) ) return;
+            list.append(String.printf(
+                listTemplate,
+                this.@#imgid,
+                this.@#preview,
+                this.@#download,
+                this.style#background-image
+            ));
+            return view.getPreviewSize( this.@#imgid, this.@#preview, this.@#download );
+        })
+    }
+    function onScroll(evt){
+      if( evt.type == Event.SCROLL_POS ){
+        liHeight = liHeight || this.$(li:last-child).box(#height, #border, #self)*2;
+        responsePosY = this.$(li:last-child).box(#top, #border, #parent) - liHeight;
+
+        if (responsePosY < this.height && this.@#loading == 0 ) {
+            this.@#loading = 1
+            $(#status-bar).text = "loading";
+            view.getDashboards()
+        }
+      }
+    };
+    // function mousewheel(evt) {
+    //     if (evt.wheelDelta < 0) {
+    //         //下滚(滚轮向内滚动，放大)
+    //         // stdout.println("down");
+    //         // view.kkk("down");
+    //         (scroll_left,scroll_top, scroll_right, scroll_bottom) = this.scroll(#rect);
+    //         stdout.println("down",scroll_bottom);
+    //     } else {
+    //         //上滚(滚轮向外滚动，缩小)
+    //         stdout.println("up");
+    //     }
+    // }
+}

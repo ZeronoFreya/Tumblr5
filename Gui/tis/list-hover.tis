@@ -1,0 +1,34 @@
+class listHover: Behavior {
+    // var panelW, panelH;
+    function attached() {
+        // this.subscribe(mouseEventMonitor, "li", Event.MOUSE);
+        // (panelW, panelH) = $(#sites-panel).box(#dimension, #border, #view);
+        this.on("click",function(){
+            if (this.@.hasClass("download")) return;
+            // stdout.println(this.@#download);
+            this.@.addClass("loading");
+            if (this.@.hasClass("timeout")){
+                view.getPreviewSize( this.@#imgid, this.@#preview );
+            }else{
+                view.downloadImg(this.@#imgid, this.@#download);
+            }
+        })
+    }
+    function onMouse(evt){
+        switch(evt.type) {
+            case Event.MOUSE_ENTER | Event.SINKING: this.showPreview(true); break;
+            case Event.MOUSE_LEAVE | Event.SINKING: this.showPreview(false); break;
+        }
+    }
+    function showPreview(flag){
+        // var (w,h) = _this.$(img).box(#dimension, #border, #view);
+        // stdout.println(panelW, panelH,w,h);
+        if (flag) {
+            // stdout.println("mouseenter");
+            this.@.addClass("hover");
+        }else{
+            // stdout.println("mouseout");
+            this.@.removeClass("hover");
+        }
+    }
+}
