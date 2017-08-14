@@ -62,7 +62,7 @@ class ServiceEvent(object):
         loop.run_forever()
 
     def tumblr__init(self, data_=None):
-        # print('initTumblr')
+        print('initTumblr')
         with open('tumblr_credentials.json', 'r') as f:
             self.tumblr_key = JLoad(f)
         self.tumblr = Tumblpy(
@@ -186,8 +186,8 @@ class ServiceEvent(object):
         #     raise 'not dashboard'
         #     return
         try:
-            dashboard = self.tumblr.dashboard( p )
-            # dashboard = self.tumblr.posts('kuvshinov-ilya.tumblr.com', None, p)
+            # dashboard = self.tumblr.dashboard( p )
+            dashboard = self.tumblr.posts('kuvshinov-ilya.tumblr.com', None, p)
             # # print('dashboard',dashboard)
         except Exception as e:
             print('err dashboard')
@@ -213,21 +213,26 @@ class ServiceEvent(object):
         return imgid
 
     def __tumblr__mkDict( self, d, preview_size, alt_sizes ):
-        print('mkMainDict')
+        print('mkDict')
         data = []
-        for v in d["posts"]:
+        for v in d['posts']:
+            if v['type'] == 'video':
+                continue
             t = {
-                'link_url'        : gets(v, 'link_url', ''),
-                'source_url'      : gets(v, 'source_url', '')
+                'link_url'        : v.get('link_url', ''),
+                'source_url'      : v.get('source_url', '')
             }
             index = 1
+            # print('mk',data)
             for i in v['photos']:
-                t['id'] = str(v['id']) + '[' + str(index) + ']'
+                t['id'] = ''.join( (str(v['id']), '[', str(index), ']') )
                 t['original_size'] = gets(i, 'original_size.url', '')
-                t['preview_size'] = gets(i, 'alt_sizes.' + str(preview_size) + '.url', '')
-                t['alt_sizes'] = gets(i, 'alt_sizes.' + str(alt_sizes) + '.url', '')
+                t['preview_size'] = gets(i, '.'.join(('alt_sizes', str(preview_size), 'url')), '')
+                t['alt_sizes'] = gets(i, '.'.join(('alt_sizes', str(alt_sizes), 'url')), '')
                 data.append(t.copy())
                 index += 1
+            # print('mk2',t)
+        # print('re_mkDict')
         return data
 
     def __tumblr__setImgList(self, imgid_list):
