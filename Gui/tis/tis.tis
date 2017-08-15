@@ -12,6 +12,10 @@ self.ready = function() {
     $(#window-debug).on("click",function(){
         Sciter.launch( "inspector.exe" );
         view.connectToInspector($(html));
+        // view.signal({
+        //     "type_" : "tumblr",
+        //     "event_" : "init"
+        // });
     });
     // var ul = $(#ul);
     // for(var i=0;i<100;i++){
@@ -22,7 +26,8 @@ self.ready = function() {
 
     $(#tumblr-login).on("click",function(){
         $(.tumblr-homepage).@.addClass("tumblr-homepage-collapsed");
-        view.initTumblr();
+        // view.initTumblr();
+        view.signal("tumblr","init");
         // $(#ul).postEvent("load-imglist");
     })
 
@@ -42,10 +47,11 @@ function appendImgLoading( html ){
     if (html=="") return;
     self.$(#tumblr-view).append(html);
     if ( $(#tumblr-view).scroll(#bottom) < 0 ) {
-        view.getDashboards();
+        // view.getDashboards();
+        view.signal("tumblr","getDashboards");
     }
 }
-function setImgId( id, i, p, dl ){
+function setImgId( id, i, t, p, dl ){
     // stdout.println(id, i);
     var li = $(li.loading[imgid="{i}"]);
     if(li){
@@ -53,6 +59,17 @@ function setImgId( id, i, p, dl ){
         li.@#preview = p;
         li.@#download = dl;
         // li.text = id;
+        switch (t){
+            case "jpg":
+                li.@.addClass("photo")
+            break;
+            case "gif":
+                li.@.addClass("anime")
+            break;
+            case "mp4":
+                li.@.addClass("video")
+            break;
+        }
         li.$(.li-footer).text = id;
     }
     // li.@#imgid = id;

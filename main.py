@@ -1,21 +1,53 @@
+"""Minimalistic PySciter sample for Windows."""
+import limp
+import sciter
+import ctypes
+# import json
 from multiprocessing import Process,Queue
-from json import load as JLoad
+from threading import Thread
+from json import load as JLoad, loads as JLoads
 from os import path as osPath, getcwd, mkdir
-import gui
-# import Controller
+
 from EventManager import EventManager
-from FunManager import ServiceEvent
+from FunManager import ServiceEvent, GuiCallBack
 
+ctypes.windll.user32.SetProcessDPIAware(2)
 
-class MainForm(object):
-    """docstring for ClassName"""
+def startServiceP(cfg, _GuiRecvMsg, _CtrlRecvMsg):
+    funMap = ServiceEvent( cfg, _GuiRecvMsg )
+    handlers = ['tumblr', 'sys']
+    EventManager( _CtrlRecvMsg, handlers, funMap ).Start()
+
+def queueLoop( _GuiRecvMsg, funCall ):
+    guiCallBack = GuiCallBack( funCall )
+    handlers = ['tumblr', 'sys']
+    EventManager( _GuiRecvMsg, handlers, guiCallBack ).Start()
+
+class Frame(sciter.Window):
     def __init__(self):
-        super(MainForm, self).__init__()
-        # self.imgListQ = imgListQ
-        # self.GuiSendMsg = _GuiSendMsg
+        '''
+            ismain=False, ispopup=False, ischild=False, resizeable=True,
+            parent=None, uni_theme=False, debug=True,
+            pos=None,  pos=(x, y)
+            size=None
+        '''
+        super().__init__(ismain=True, debug=True)
+        self.set_dispatch_options(enable=True, require_attribute=False)
+
+    def _document_ready(self, target):
+        print('ready')
         self.cfg = self.initCfg()
         self.GuiRecvMsg = Queue()
         self.CtrlRecvMsg = Queue()
+        p = Process(target = startServiceP, args = ( self.cfg, self.GuiRecvMsg, self.CtrlRecvMsg ))
+        p.daemon = True
+        p.start()
+        t = Thread(target = queueLoop, args=( self.GuiRecvMsg, self.call_function ))
+        t.daemon = True
+        t.start()
+
+    def document_close(self):
+        print("close")
 
     def initCfg(self):
         cfg = {"tumblr":{"alt_sizes":-3,"preview_size":-4,"dashboard_param":{"limit":5,"offset":0},"posts_param":{"limit":5,"offset":0}},"proxies":"","imgTemp":"","imgSave":""}
@@ -30,34 +62,16 @@ class MainForm(object):
             mkdir(cfg['imgSave'])
         return cfg
 
-    def run_app(self):
-        print('gui')
-        Process(target = gui.run_app, args = ( self.cfg, self.GuiRecvMsg, self.CtrlRecvMsg )).start()
-
-        print('ctrl')
-        # Process(target = Controller.run_app, args = ( self.cfg, self.GuiRecvMsg, self.CtrlRecvMsg )).start()
-        funMap = ServiceEvent( self.cfg, self.GuiRecvMsg )
-        handlers = ['tumblr', 'sys']
-        EventManager( self.CtrlRecvMsg, handlers, funMap ).Start()
-        print('exitApp')
-
+    def signal(self, t, e, d = None):
+        '''接收界面事件并转发'''
+        self.CtrlRecvMsg.put({
+            'type_' : str(t).strip('"'),
+            'event_' : str(e).strip('"'),
+            'data_' : d if not d else JLoads(str(d))
+        })
 
 
 if __name__ == '__main__':
-    '''
-    http://www.cnblogs.com/kaituorensheng/p/4445418.html
-    Pipe方法返回(conn1, conn2)代表一个管道的两个端。
-    Pipe方法有duplex参数，如果duplex参数为True(默认值)，那么这个管道是全双工模式，也就是说conn1和conn2均可收发。
-    duplex为False，conn1只负责接受消息，conn2只负责发送消息。
-    '''
-    # pipe = Pipe(duplex=False)
-    # _GuiSendMsg = Queue()
-    # _GuiRecvMsg = Queue()
-    # _CtrlSendMsg = Queue()
-    # _CtrlRecvMsg = Queue()
-    # imgListQ = Queue()
-    # cfg = initCfg()
-
-    # eventManager = EventManager( _GuiSendMsg, funMap )
-    main = MainForm()
-    main.run_app()
+    frame = Frame()
+    frame.load_file("Gui/main.html")
+    frame.run_app()

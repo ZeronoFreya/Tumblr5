@@ -229,6 +229,7 @@ class ServiceEvent(object):
                 t['original_size'] = gets(i, 'original_size.url', '')
                 t['preview_size'] = gets(i, '.'.join(('alt_sizes', str(preview_size), 'url')), '')
                 t['alt_sizes'] = gets(i, '.'.join(('alt_sizes', str(alt_sizes), 'url')), '')
+                t['type'] = t['alt_sizes'].split(".")[-1]
                 data.append(t.copy())
                 index += 1
             # print('mk2',t)
@@ -241,10 +242,11 @@ class ServiceEvent(object):
         for imgid in imgid_list:
             d = self.imgList.pop(0)
             self.__putGui('tumblr', 'setImgId', {
-                'id': d['id'],
-                'imgid': imgid,
-                'preview': d['preview_size'],
-                'download': d['original_size']
+                'id'        : d['id'],
+                'imgid'     : imgid,
+                'type'      : d['type'],
+                'preview'   : d['preview_size'],
+                'download'  : d['original_size']
             })
             file_name = d['id'] + '_' + d['alt_sizes'].split("_")[-1]
             file_path = osPath.join( self.imgTemp, file_name )
@@ -276,3 +278,26 @@ class ServiceEvent(object):
             'event_' : e,
             'data_' : d
         })
+
+class GuiCallBack(object):
+    """docstring for ClassName"""
+    def __init__(self, funCall):
+        self.funCall = funCall
+
+    def tumblr__appendImg(self, d):
+        return self.funCall('appendImgLoading', d )
+
+    def tumblr__setImgId(self, d):
+        return self.funCall('setImgId', d['id'], d['imgid'], d['type'], d['preview'], d['download'] )
+    def tumblr__setImgIdOver(self, d):
+        return self.funCall('setImgIdOver')
+    def tumblr__setImgBg(self, d):
+        return self.funCall('setImgBg', d['id'], d['fpath'] )
+    def tumblr__setPreview(self, d):
+        return self.funCall('setPreview', d['id'], d['fpath'] )
+    def tumblr__downloaded(self, d):
+        return self.funCall('downloaded', d['id'], d['fpath'], d['module'])
+    def tumblr__timeout(self, d):
+        return self.funCall('timeout', d['id'], d['http'], d['module'] )
+    def tumblr__statusBar(self, d):
+        return self.funCall('statusInfo', d['text'] )

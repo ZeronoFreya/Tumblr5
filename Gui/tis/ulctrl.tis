@@ -17,7 +17,11 @@ class UlCtrl: Behavior {
         this.on("click","li",function(){
             if ( this.@.hasClass("timeout") ) {
                 this.@.addClass("loading").@.removeClass("timeout");
-                return view.refreshTimeoutImg( this.@#imgid, this.@#thumbnails );
+                // return view.refreshTimeoutImg( this.@#imgid, this.@#thumbnails );
+                return view.signal("tumblr", "refreshTimeoutImg", {
+                    "id" : this.@#imgid,
+                    "alt_size" : this.@#thumbnails
+                });
             }
             var list = $(#tumblr .list);
             if ( list.$(li[imgid="{this.@#imgid}"]) ) return;
@@ -28,7 +32,12 @@ class UlCtrl: Behavior {
                 this.@#download,
                 this.style#background-image
             ));
-            return view.getPreviewSize( this.@#imgid, this.@#preview, this.@#download );
+            // return view.getPreviewSize( this.@#imgid, this.@#preview, this.@#download );
+            return view.signal("tumblr", "getPreviewSize", {
+                "id" : this.@#imgid,
+                "preview_size" : this.@#preview,
+                "original_size" : this.@#download
+            });
         })
     }
     function onScroll(evt){
@@ -39,7 +48,8 @@ class UlCtrl: Behavior {
         if (responsePosY < this.height && this.@#loading == 0 ) {
             this.@#loading = 1
             $(#status-bar).text = "loading";
-            view.getDashboards()
+            // view.getDashboards()
+            view.signal("tumblr","getDashboards");
         }
       }
     };

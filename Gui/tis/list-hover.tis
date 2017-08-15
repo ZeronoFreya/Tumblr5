@@ -8,9 +8,18 @@ class listHover: Behavior {
             // stdout.println(this.@#download);
             this.@.addClass("loading");
             if (this.@.hasClass("timeout")){
-                view.getPreviewSize( this.@#imgid, this.@#preview );
+                // view.getPreviewSize( this.@#imgid, this.@#preview );
+                view.signal("tumblr", "getPreviewSize", {
+                    "id" : this.@#imgid,
+                    "preview_size" : this.@#preview,
+                    "original_size" : this.@#download
+                });
             }else{
-                view.downloadImg(this.@#imgid, this.@#download);
+                // view.downloadImg(this.@#imgid, this.@#download);
+                view.signal("tumblr", "downloadImg", {
+                    "id" : this.@#imgid,
+                    "download" : this.@#download
+                });
             }
         })
     }
