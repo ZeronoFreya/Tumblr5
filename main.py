@@ -45,6 +45,7 @@ class Frame(sciter.Window):
         t = Thread(target = queueLoop, args=( self.GuiRecvMsg, self.call_function ))
         t.daemon = True
         t.start()
+        self.call_function('hideStartScreen')
 
     def document_close(self):
         print("close")

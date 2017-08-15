@@ -49,6 +49,7 @@ class ServiceEvent(object):
         self.liHtml = '''
             <li.loading imgid=%s>
                 <footer .li-footer></footer>
+                <div.imgtype></div>
             </li>
         '''
         self.new_loop = asyncio.new_event_loop()
@@ -186,8 +187,8 @@ class ServiceEvent(object):
         #     raise 'not dashboard'
         #     return
         try:
-            # dashboard = self.tumblr.dashboard( p )
-            dashboard = self.tumblr.posts('kuvshinov-ilya.tumblr.com', None, p)
+            dashboard = self.tumblr.dashboard( p )
+            # dashboard = self.tumblr.posts('kuvshinov-ilya.tumblr.com', None, p)
             # # print('dashboard',dashboard)
         except Exception as e:
             print('err dashboard')

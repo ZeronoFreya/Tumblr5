@@ -2,6 +2,15 @@
 widget#widget{
     position: relative;
 }
+#start-screen{
+    position: absolute;
+    top: @HEADER-HEIGHT;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: @BGCOLOR-WHITE;
+    padding: 32dip;
+}
 aside#widget-aside{
     position: absolute;
     top: 0;
@@ -284,7 +293,8 @@ aside#tumblr-aside{
     height: width(100%);
     border-radius: 50%;
     overflow: hidden;
-    background: url(d:/Project/GitHub/Tumblr4/imgTemp/163751837940[1]_250.jpg) no-repeat center center;
+    @LI-BACKGROUND;
+    /*background: url(d:/Project/GitHub/Tumblr4/imgTemp/163751837940[1]_250.jpg) no-repeat center center;*/
     background-size: contain;
     border: 2dip @BORDERCOLOR solid;
 }
@@ -440,7 +450,7 @@ aside#tumblr-aside{
     /*cursor:url(img/cursor.png) 25 25;*/
     background-image-frame: 1;
 }
-#tumblr .view li:hover{
+#tumblr-view li:hover{
     background-image-frame:animate;
 }
 #tumblr .view li.loading{
@@ -451,6 +461,13 @@ aside#tumblr-aside{
     foreground:rgba(250,250,250,.6) url(../img/timeout.png) no-repeat center center;
     foreground-size: auto;
 }
+#tumblr-view li:hover div.imgtype{
+    display: none!important;
+}
+#tumblr-view li.anime div.imgtype{
+    display: block;
+    background-image: url(../img/downloaded.png);
+}
 #tumblr .li-footer{
     opacity: 0;
     position: absolute;
@@ -460,7 +477,18 @@ aside#tumblr-aside{
     padding: 20dip;
     background: linear-gradient(top, rgba(36,38,38,0), rgba(36,38,38,.75));
 }
-
+#tumblr-view div.imgtype{
+    /*opacity: 0;*/
+    display: none;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    @LI-BACKGROUND;
+    background-size: auto;
+    background-color: rgba(0,0,0,.5);
+}
 #tumblr .view li:hover .li-footer{
     opacity: 1;
     transition: opacity(cubic-out,0.2s);

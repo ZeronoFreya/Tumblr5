@@ -43,6 +43,13 @@ self.ready = function() {
     //     }
     // });
 }
+function hideStartScreen( text = ""){
+    if (text != "") {
+        $(#start-screen).text += text + "\n";
+        return;
+    }
+    $(#start-screen).remove();
+}
 function appendImgLoading( html ){
     if (html=="") return;
     self.$(#tumblr-view).append(html);
