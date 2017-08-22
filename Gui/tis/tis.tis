@@ -5,7 +5,7 @@ namespace selects {
 self.ready = function() {
     //设置窗口居中
     setWinToCenter(1480);
-    view.windowTopmost = true;
+    // view.windowTopmost = true;
     // var h = $(header).box(#height, #border, #view);
     // setMinSize( 320,197.76 );
     // 加载或刷新deBug？
@@ -60,7 +60,12 @@ function appendImgLoading( html ){
 }
 function setImgId( id, i, t, p, dl ){
     // stdout.println(id, i);
-    var li = $(li.loading[imgid="{i}"]);
+    var li = $(li[imgid="{id}"]);
+    if(li){
+        li.remove();
+        return;
+    }
+    li = $(li.loading[imgid="{i}"]);
     if(li){
         li.@#imgid = id;
         li.@#preview = p;
